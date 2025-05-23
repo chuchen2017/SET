@@ -9,6 +9,7 @@ This is the offical Codebase for the submitting paper.
 Demostration of Spatial Embedding Alignment.
 </p>
 
+Run /home/users/chen/SET/runners/main.py for the transfer
 
 
 
