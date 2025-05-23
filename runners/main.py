@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 import os
 import gc
-from torch.utils.data import random_split
 
 torch.manual_seed(0)
 random.seed(0)
