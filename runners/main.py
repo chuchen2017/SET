@@ -1,7 +1,6 @@
 import random
-
 from models.SocialInference import Regession_Baseline,Regression_Dataset
-from models.LocalMatching import Spatial_Initiate,SOM
+from models.LocalMatching import Spatial_Initiate,Structural_Matching
 from models.GlobalMatching import Regression_Dataset_Constractive,Global_Tuning
 from utils.load_datasets import load_dataset
 from utils.utils import graph_construction,location_entropy_construction,sample_anchors,test_foundation_model
@@ -157,13 +156,13 @@ def transfer(foundation_model_trained_on, city_apply_to, device, foundation_mode
         file.write(json.dumps(result_log))
 
 
-    embedding_file_path = '../data/embedding' + city_apply_to + '_' + foundation_model_trained_on + '_SOM_tuned.pth'
+    embedding_file_path = '../data/embedding' + city_apply_to + '_' + foundation_model_trained_on + '_Structural_Matching_tuned.pth'
     if os.path.exists(embedding_file_path) and load_SpatialInitiate == True:
         embedding_NY = torch.nn.Embedding(num_embeddings=len(loc2index_NY), embedding_dim=embedding_LA.weight.shape[1],
                                           padding_idx=0).to(device)
         embedding_weight = torch.load(embedding_file_path, map_location=device)
         embedding_NY.weight.data=embedding_weight
-        som = SOM(embedding_NY.weight.data, gaussian_graph_NY, lr=0.1)
+        som = Structural_Matching(embedding_NY.weight.data, gaussian_graph_NY, lr=0.1)
         print("Loaded Spatial Embedding from file.")
         som.embedding_to_map_adj = None
         del gaussian_graph_NY
@@ -174,7 +173,7 @@ def transfer(foundation_model_trained_on, city_apply_to, device, foundation_mode
             gaussian_graph_NY = gaussian_graph_NY.double().to(device)
             embedding_NY = embedding_NY.double().to(device)
             embedding_LA = embedding_LA.double().to(device)
-            som = SOM(embedding_NY.weight.data, gaussian_graph_NY, lr=0.1)
+            som = Structural_Matching(embedding_NY.weight.data, gaussian_graph_NY, lr=0.1)
             som.train(embedding_LA.weight.data, anchor_NY, anchor_NY2LA, anchor_iteration=10,
                       extra_training=0)  # 10 5000+
 
@@ -192,16 +191,16 @@ def transfer(foundation_model_trained_on, city_apply_to, device, foundation_mode
         weighted = som.get_weights().detach().to(device)
         prediction_model.loc_embedding.weight.data = weighted  # embedding_NY.weight.data.double() torch.nn.Embedding(len(loc2index_NY),embedding_dim=feature_dim).weight.data.double().to(device)   #
         pr_auc, roc_auc = test_foundation_model(prediction_model, test_loader_NY, pooling_method)
-        print('SOM tuned Embedding Result: ')
+        print('Structural_Matching tuned Embedding Result: ')
         print(f"PR AUC: {pr_auc:.4f}")
         print(f"AU ROC: {roc_auc:.4f}")
 
     result_log = load_logfile()
     if additional_information is None:
-        result_log[city_apply_to + '_' + foundation_model_trained_on + '_SOM'] = (pr_auc, roc_auc)
+        result_log[city_apply_to + '_' + foundation_model_trained_on + 'Structural_Matching'] = (pr_auc, roc_auc)
     else:
         result_log[
-            city_apply_to + '_' + foundation_model_trained_on + '_SOM_' + additional_information] = (
+            city_apply_to + '_' + foundation_model_trained_on + '_Structural_Matching_' + additional_information] = (
             pr_auc, roc_auc)
     with open('../data/result_log.json', 'w', encoding='utf-8') as file:
         file.write(json.dumps(result_log))

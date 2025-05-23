@@ -54,30 +54,6 @@ class Regression_Dataset_Constractive(Dataset):
                 if covisited1.shape[0] == 0 or covisited2.shape[0] == 0 or x1.shape[0] == 0 or x2.shape[0] == 0:
                     break
                 contrastive_pairs_user.append((pair1, pair2))
-            # x_set = set(x.tolist())
-            # while len(x_set) >= 4:
-            #     loc1, loc2 = random.sample(list(x_set), k=2)
-            #     x_set.remove(loc1)
-            #     x_set.remove(loc2)
-            #
-            #     x1 = x[x != loc1]
-            #     times1 = times[x != loc1]
-            #     covisited1 = covisited[covisited != loc1]
-            #     covisited_time1 = covisited_time[covisited != loc1]
-            #     traj11 = traj1[traj1 != loc1]
-            #     traj21 = traj2[traj2 != loc1]
-            #     pair1 = (x1, times1, covisited1, covisited_time1, traj11, traj21, self.frind_coloctions[index][6])
-            #
-            #     x2 = x[x != loc2]
-            #     times2 = times[x != loc2]
-            #     covisited2 = covisited[covisited != loc2]
-            #     covisited_time2 = covisited_time[covisited != loc2]
-            #     traj12 = traj1[traj1 != loc2]
-            #     traj22 = traj2[traj2 != loc2]
-            #     pair2 = (x2, times2, covisited2, covisited_time2, traj12, traj22, self.frind_coloctions[index][6])
-            #
-            #     contrastive_pairs_user.append((pair1, pair2))
-
             if len(contrastive_pairs_user) == 0:
                 continue
             self.contrastive_pairs.append(contrastive_pairs_user)

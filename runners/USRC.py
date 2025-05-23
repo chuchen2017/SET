@@ -1,24 +1,14 @@
 import pandas as pd
 import numpy as np
 import torch
-import torch.optim as optim
-from caffe2.python.examples.imagenet_trainer import Train
-from thop import profile, clever_format
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 import random
-import scipy
-import collections
-from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-import math
 from sklearn.metrics import roc_auc_score,precision_recall_curve, auc
-import time
 
 from models.SocialInference import Regession_Baseline,Regression_Dataset
-from models.LocalMatching import Spatial_Initiate,SOM
-from models.GlobalMatching import Regression_Dataset_Constractive,Global_Tuning
 from utils.load_datasets import load_dataset
 from utils.utils import graph_construction,location_entropy_construction,sample_anchors,test_foundation_model
 
