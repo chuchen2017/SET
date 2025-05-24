@@ -240,8 +240,6 @@ if __name__ == '__main__':
             if foundation_model_trained_on == city_apply_to:
                 continue
             print(foundation_model_trained_on, city_apply_to)
-            #foundation_model_path='../data/Regession_Baseline_NO_Noise_MaxPooling_Foursquare_NY.pth'#'../data/Regession_Baseline_NO_inititate_FoursquareNY.pth'
-            #_MSEnoAug_x100_TrajSameWeight
             foundation_model_path='../data/Regession_Baseline_Noise00_MixPooling_'+foundation_model_trained_on+'_MSEnoAug_x100_TrajSameWeight.pth'
             additional_information = 'Noise00_Mix_Pooling_01264_maskedTrajColoc_0.9anchor_som5_AugColocation_2ST'  #'Attention_Pooling'  0.3713 _maskedTrajColoc
 
@@ -255,21 +253,12 @@ if __name__ == '__main__':
             top_n=500
             load_SpatialInitiate = False
 
-            best_pr_auc=0
-            for i in range(1,2):
-                additional_information+=str(i)
+            for i in range(1,3):
+                additional_information+='_'+str(i)
                 try:
                     pr_auc, roc_auc=transfer(foundation_model_trained_on,city_apply_to,device,foundation_model_path,feature_dim=location_embedding_dim,test_batch_size=test_batch_size,
                              contrastive_batch_size=contrastive_batch_size,load_SpatialInitiate=load_SpatialInitiate,additional_information=additional_information,
                              contrastive_tuning_epochs=contrastive_tuning_epochs,contrastive_tuning_temp=contrastive_tuning_temp,anchor_rate=anchor_rate, top_n=top_n)
-
-                    if pr_auc>best_pr_auc:
-                        best_pr_auc=pr_auc
-                        best_roc_auc=roc_auc
-                        result_log = load_logfile()
-                        result_log[city_apply_to + '_' + foundation_model_trained_on + '_GlobalMatching_' + additional_information] = (pr_auc, roc_auc)
-                        with open('../data/result_log.json', 'w', encoding='utf-8') as file:
-                            file.write(json.dumps(result_log))
 
                 except Exception as e:
                     print(e)
